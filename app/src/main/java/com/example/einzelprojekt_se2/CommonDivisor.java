@@ -4,6 +4,7 @@ import android.util.Log;
 
 public class CommonDivisor {
 
+    //returns 0 if all digits are prime to each other
     public static DivisorInfo getCommonDivisor(int number){
 
         int length = (int) (Math.log10(number) + 1);

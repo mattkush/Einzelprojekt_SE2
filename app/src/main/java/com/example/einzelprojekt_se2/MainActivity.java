@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity implements TextChange {
     private TCP connection;
 
     public void updateText(String text){
+        //this function may be called from another thread, other threads are not allowed to modify ui-elements
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -34,7 +35,9 @@ public class MainActivity extends AppCompatActivity implements TextChange {
     private View.OnClickListener btnNetworkListener = new View.OnClickListener() {
         public void onClick(View v) {
             String matrikelnummer = txtIn.getText().toString();
+            //set the matrikelnummer to be transmitted
             connection.setPayload(matrikelnummer);
+            //transmit in a new thread
             Thread thread = new Thread(connection);
             thread.start();
         }
@@ -54,11 +57,14 @@ public class MainActivity extends AppCompatActivity implements TextChange {
         txtOut = (TextView)findViewById(R.id.textViewOutput);
         txtIn = (EditText)findViewById(R.id.editTextMatrikelnummer);
 
+        //set up the tcp socket for later, add this, beacause MainActivity implements a TextChange method, which can be used as a callback when data is recieved
         connection = new TCP("se2-isys.aau.at",53212,this);
 
+        //register evt handler to buttonServerAnfrage
         buttonServerAnfrage = (Button)findViewById(R.id.buttonServerAnfrage);
         addEvtHandler(buttonServerAnfrage, btnNetworkListener);
 
+        //register evt handler to buttonBerechnungCommonDivisor
         buttonBerechnungCommonDivisor = (Button)findViewById(R.id.buttonBerechnungCommonDivisor);
         addEvtHandler(buttonBerechnungCommonDivisor, btnCalculateListener);
 
