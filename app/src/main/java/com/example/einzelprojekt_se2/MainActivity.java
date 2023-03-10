@@ -11,6 +11,7 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity implements TextChange {
 
     private Button buttonServerAnfrage;
+    private Button buttonBerechnungCommonDivisor;
 
     private TextView txtOut;
     private EditText txtIn;
@@ -27,7 +28,6 @@ public class MainActivity extends AppCompatActivity implements TextChange {
     }
 
     private void addEvtHandler(Button btn, View.OnClickListener listener){
-        btn = (Button)findViewById(R.id.buttonServerAnfrage);
         btn.setOnClickListener(listener);
     }
 
@@ -40,6 +40,13 @@ public class MainActivity extends AppCompatActivity implements TextChange {
         }
     };
 
+    private View.OnClickListener btnCalculateListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            DivisorInfo divisor = CommonDivisor.getCommonDivisor(Integer.parseInt(txtIn.getText().toString()));
+            txtOut.setText("Divisor:"+divisor.getDivisor()+" on Idx1:"+divisor.getIndex1()+" on Idx2:"+divisor.getIndex2());
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +56,11 @@ public class MainActivity extends AppCompatActivity implements TextChange {
 
         connection = new TCP("se2-isys.aau.at",53212,this);
 
+        buttonServerAnfrage = (Button)findViewById(R.id.buttonServerAnfrage);
         addEvtHandler(buttonServerAnfrage, btnNetworkListener);
+
+        buttonBerechnungCommonDivisor = (Button)findViewById(R.id.buttonBerechnungCommonDivisor);
+        addEvtHandler(buttonBerechnungCommonDivisor, btnCalculateListener);
 
     }
 }
